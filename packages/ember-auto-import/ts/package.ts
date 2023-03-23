@@ -521,6 +521,7 @@ export default class Package {
         require.resolve('@babel/plugin-proposal-class-properties'),
         { loose: false },
       ],
+      ensureModuleApiPolyfill ?
       [
         require.resolve('babel-plugin-htmlbars-inline-precompile'),
         {
@@ -536,6 +537,20 @@ export default class Package {
             },
           },
         },
+      ] :
+      [
+        require.resolve('babel-plugin-ember-template-compilation'),
+        {
+          // As above, we present the AST transforms in reverse order
+          // transforms: [...pluginInfo.plugins].reverse(),
+          compilerPath: require.resolve(templateCompilerPath),
+          enableLegacyModules: [
+            'ember-cli-htmlbars',
+            'ember-cli-htmlbars-inline-precompile',
+            'htmlbars-inline-precompile',
+          ],
+        },
+        'ember-cli-htmlbars:inline-precompile',
       ],
       ...macrosConfig.babelPluginConfig(),
     ];
